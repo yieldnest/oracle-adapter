@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BSD 3-Clause License
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.24;
 
 import {Vm} from "lib/forge-std/src/Vm.sol";
