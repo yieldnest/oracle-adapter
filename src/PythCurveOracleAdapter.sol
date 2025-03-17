@@ -1,21 +1,47 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.24;
 
-import "lib/openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
-import "PythStructs.sol";
-import "IPyth.sol";
+import {AccessControlUpgradeable} from
+    "lib/openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import {PythStructs} from "src/pyth/PythStructs.sol";
+import {IPyth} from "src/pyth/IPyth.sol";
 
 contract PythCurveOracleAdapter is AccessControlUpgradeable {
-    bytes32 public constant priceId = 0x8bdbbbbedd7c2ea2532d04c00dbcea6bb1cb800336953dfdf3747f825b809d81;
-    address public constant priceFeed = 0x8250f4aF4B972684F7b336503E2D6dFeDeB1487a; // for base
-    uint256 public constant minAge = 86400; // age in seconds
+    error InvalidPriceId();
+    error InvalidPriceFeed();
+    error InvalidMinAge();
+    error InvalidAdmin();
+    error OracleConfidenceTooLow();
+    error OraclePriceNotPositive();
+    error OracleExponentNotNegative();
+
+    bytes32 public priceId;
+    address public priceFeed;
+    uint256 public minAge;
+
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(address _admin, bytes32 _priceId, address _priceFeed, uint256 _minAge) public initializer {
+        if (_admin == address(0)) revert InvalidAdmin();
+        if (_priceId == bytes32(0)) revert InvalidPriceId();
+        if (_priceFeed == address(0)) revert InvalidPriceFeed();
+        if (_minAge == 0) revert InvalidMinAge();
+
+        priceId = _priceId;
+        priceFeed = _priceFeed;
+        minAge = _minAge;
+        __AccessControl_init();
+        _grantRole(DEFAULT_ADMIN_ROLE, _admin);
+    }
 
     function getPrice() public view returns (uint256) {
         IPyth priceContract = IPyth(priceFeed);
         PythStructs.Price memory r = priceContract.getPriceNoOlderThan(priceId, minAge);
-        require(r.conf == 1, "Oracle confidence too low");
-        require(r.price > 0, "Oracle price not positive");
-        require(r.expo < 0, "Oracle expo not negative");
+        if (r.conf != 1) revert OracleConfidenceTooLow();
+        if (r.price <= 0) revert OraclePriceNotPositive();
+        if (r.expo >= 0) revert OracleExponentNotNegative();
 
         uint256 needed = 18 - uint32(r.expo * -1); // It will be 10
         return uint256(uint64(r.price)) * (10 ** needed);
