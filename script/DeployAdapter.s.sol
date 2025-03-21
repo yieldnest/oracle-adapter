@@ -19,7 +19,7 @@ contract DeployAdapter is BaseData, Script {
         address admin = getSecurityCouncil(block.chainid);
         bytes32 priceId = YNETH_ETH_PRICE_FEED;
         address priceFeed = getPriceFeed(block.chainid);
-        uint256 minAge = 1 days;
+        uint256 minAge = 2 days;
 
         vm.startBroadcast();
 
