@@ -11,7 +11,6 @@ contract PythCurveOracleAdapter is AccessControlUpgradeable {
     error InvalidPriceFeed();
     error InvalidMinAge();
     error InvalidAdmin();
-    error OracleConfidenceTooLow();
     error OraclePriceNotPositive();
     error OracleExponentNotNegative();
 
@@ -39,7 +38,6 @@ contract PythCurveOracleAdapter is AccessControlUpgradeable {
     function getPrice() public view returns (uint256) {
         IPyth priceContract = IPyth(priceFeed);
         PythStructs.Price memory r = priceContract.getPriceNoOlderThan(priceId, minAge);
-        if (r.conf != 1) revert OracleConfidenceTooLow();
         if (r.price <= 0) revert OraclePriceNotPositive();
         if (r.expo >= 0) revert OracleExponentNotNegative();
 
