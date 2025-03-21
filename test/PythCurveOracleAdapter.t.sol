@@ -33,10 +33,19 @@ contract AdapterTest is Test, BaseData {
         assertEq(
             adapter.hasRole(adapter.DEFAULT_ADMIN_ROLE(), getSecurityCouncil(block.chainid)), true, "DEFAULT_ADMIN_ROLE"
         );
+        assertEq(
+            adapter.hasRole(adapter.ORACLE_MANAGER_ROLE(), getSecurityCouncil(block.chainid)), true, "ORACLE_MANAGER_ROLE"
+        );
         assertEq(adapter.priceId(), YNETH_ETH_PRICE_FEED, "priceId");
         assertEq(adapter.priceFeed(), getPriceFeed(block.chainid), "priceFeed");
         assertEq(adapter.minAge(), MIN_AGE, "minAge");
     }
+
+    // TODO 
+    //function test_setMinAge() public {
+    //    adapter.setMinAge(300);
+    //    assertEq(adapter.minAge(), 300, "minAge");
+    //}
 
     function test_Basic() public view {
         uint256 price = adapter.getPrice();

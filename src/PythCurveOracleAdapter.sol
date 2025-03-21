@@ -14,6 +14,10 @@ contract PythCurveOracleAdapter is AccessControlUpgradeable {
     error OraclePriceNotPositive();
     error OracleExponentNotNegative();
 
+    bytes32 public constant ORACLE_MANAGER_ROLE = keccak256("ORACLE_MANAGER_ROLE");
+
+    event NewMinAge(uint256 minAge);
+
     bytes32 public priceId;
     address public priceFeed;
     uint256 public minAge;
@@ -33,7 +37,16 @@ contract PythCurveOracleAdapter is AccessControlUpgradeable {
         minAge = _minAge;
         __AccessControl_init();
         _grantRole(DEFAULT_ADMIN_ROLE, _admin);
+        _grantRole(ORACLE_MANAGER_ROLE, _admin);
     }
+
+    function setMinAge(uint256 _minAge) public
+        onlyRole(ORACLE_MANAGER_ROLE) {
+
+        minAge = _minAge;
+        emit NewMinAge(_minAge);
+    }
+
 
     function getPrice() public view returns (uint256) {
         IPyth priceContract = IPyth(priceFeed);
