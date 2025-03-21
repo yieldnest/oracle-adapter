@@ -40,13 +40,10 @@ contract PythCurveOracleAdapter is AccessControlUpgradeable {
         _grantRole(ORACLE_MANAGER_ROLE, _admin);
     }
 
-    function setMinAge(uint256 _minAge) public
-        onlyRole(ORACLE_MANAGER_ROLE) {
-
+    function setMinAge(uint256 _minAge) public onlyRole(ORACLE_MANAGER_ROLE) {
         minAge = _minAge;
         emit NewMinAge(_minAge);
     }
-
 
     function getPrice() public view returns (uint256) {
         IPyth priceContract = IPyth(priceFeed);
