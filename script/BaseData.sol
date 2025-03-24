@@ -33,7 +33,7 @@ contract BaseData {
 
         // INK MAINNET
         priceFeeds[57073] = 0x2880aB155794e7179c9eE2e38200202908C17B43;
-        securityCouncils[57073] = address(0);
+        securityCouncils[57073] = 0x5848af047b56F7FCc9DFEAC2F535d4800069E9E1;
 
         // Add the rest of the mainnets...
 
