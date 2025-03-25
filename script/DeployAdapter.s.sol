@@ -17,7 +17,7 @@ contract DeployAdapter is BaseData, Script {
         bytes32 proxySalt = _createSalt(msg.sender, "PythCurveOracleAdapterProxy");
 
         address admin = getSecurityCouncil(block.chainid);
-        bytes32 priceId = YNETH_ETH_PRICE_FEED;
+        bytes32 priceId = YNETHX_WETH_PRICE_FEED;
         address priceFeed = getPriceFeed(block.chainid);
         uint256 minAge = 2 days;
 
