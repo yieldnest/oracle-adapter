@@ -45,7 +45,7 @@ contract ynOracleAdapter is AccessControlUpgradeable {
         emit NewMinAge(_minAge);
     }
 
-    function getPrice() public view returns (uint256) {
+    function getPriceYnethxWeth() public view returns (uint256) {
         IPyth priceContract = IPyth(priceFeed);
         PythStructs.Price memory r = priceContract.getPriceNoOlderThan(priceId, minAge);
         if (r.price <= 0) revert OraclePriceNotPositive();

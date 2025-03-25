@@ -61,7 +61,7 @@ contract AdapterTest is Test, BaseData {
     }
 
     function test_Basic() public view {
-        uint256 price = adapter.getPrice();
+        uint256 price = adapter.getPriceYnethxWeth();
         console.log(price);
         assertGt(price, 0);
     }
