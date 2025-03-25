@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
-import {PythCurveOracleAdapter} from "src/PythCurveOracleAdapter.sol";
+import {ynOracleAdapter} from "src/ynOracleAdapter.sol";
 import {TransparentUpgradeableProxy} from
     "lib/openzeppelin-contracts/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {IAccessControl} from "lib/openzeppelin-contracts/contracts/access/IAccessControl.sol";
@@ -10,19 +10,19 @@ import {IAccessControl} from "lib/openzeppelin-contracts/contracts/access/IAcces
 import {BaseData} from "script/BaseData.sol";
 
 contract AdapterTest is Test, BaseData {
-    PythCurveOracleAdapter public adapter;
+    ynOracleAdapter public adapter;
 
     // TODO: make this 1 days
     // currently the oracle price is not updated in the last 1 days so the test fails
     uint256 public constant MIN_AGE = 15 days;
 
     function setUp() public {
-        PythCurveOracleAdapter impl = new PythCurveOracleAdapter();
+        ynOracleAdapter impl = new ynOracleAdapter();
 
         address admin = getSecurityCouncil(block.chainid);
         TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(address(impl), admin, "");
 
-        adapter = PythCurveOracleAdapter(address(proxy));
+        adapter = ynOracleAdapter(address(proxy));
 
         bytes32 priceId = YNETH_ETH_PRICE_FEED;
         address priceFeed = getPriceFeed(block.chainid);

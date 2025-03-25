@@ -6,7 +6,7 @@ import {AccessControlUpgradeable} from
 import {PythStructs} from "src/pyth/PythStructs.sol";
 import {IPyth} from "src/pyth/IPyth.sol";
 
-contract PythCurveOracleAdapter is AccessControlUpgradeable {
+contract ynOracleAdapter is AccessControlUpgradeable {
     error InvalidPriceId();
     error InvalidPriceFeed();
     error InvalidMinAge();

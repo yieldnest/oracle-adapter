@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
-import {PythCurveOracleAdapter} from "src/PythCurveOracleAdapter.sol";
+import {ynOracleAdapter} from "src/ynOracleAdapter.sol";
 import {AdapterFactory} from "src/factory/AdapterFactory.sol";
 import {TimelockController} from "lib/openzeppelin-contracts/contracts/governance/TimelockController.sol";
 import {BaseData} from "script/BaseData.sol";
@@ -12,9 +12,9 @@ contract DeployAdapter is BaseData, Script {
     string public constant VERSION = "v0.0.1";
 
     function run() public {
-        bytes32 factorySalt = _createSalt(msg.sender, "PythCurveOracleAdapterFactory");
-        bytes32 implSalt = _createSalt(msg.sender, "PythCurveOracleAdapterImpl");
-        bytes32 proxySalt = _createSalt(msg.sender, "PythCurveOracleAdapterProxy");
+        bytes32 factorySalt = _createSalt(msg.sender, "ynOracleAdapterFactory");
+        bytes32 implSalt = _createSalt(msg.sender, "ynOracleAdapterImpl");
+        bytes32 proxySalt = _createSalt(msg.sender, "ynOracleAdapterProxy");
 
         address admin = getSecurityCouncil(block.chainid);
         bytes32 priceId = YNETHX_WETH_PRICE_FEED;
@@ -32,11 +32,11 @@ contract DeployAdapter is BaseData, Script {
 
         console.log("TimelockController deployed to", timelock);
         bytes memory initializeArgs =
-            abi.encodeWithSelector(PythCurveOracleAdapter.initialize.selector, admin, priceId, priceFeed, minAge);
+            abi.encodeWithSelector(ynOracleAdapter.initialize.selector, admin, priceId, priceFeed, minAge);
 
-        // NOTE: PythCurveOracleAdapter is deployed using create3 to create a deterministic address on all chains
+        // NOTE: ynOracleAdapter is deployed using create3 to create a deterministic address on all chains
         address proxy = factory.deployContractAndProxy(
-            implSalt, proxySalt, timelock, type(PythCurveOracleAdapter).creationCode, initializeArgs
+            implSalt, proxySalt, timelock, type(ynOracleAdapter).creationCode, initializeArgs
         );
         console.log("Proxy deployed to", proxy);
         vm.stopBroadcast();
@@ -69,7 +69,7 @@ contract DeployAdapter is BaseData, Script {
             abi.encodePacked(
                 vm.projectRoot(),
                 "/deployments/",
-                "PythCurveOracleAdapter",
+                "ynOracleAdapter",
                 "-",
                 vm.toString(block.chainid),
                 "-",
