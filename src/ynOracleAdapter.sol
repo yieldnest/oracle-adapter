@@ -6,7 +6,7 @@ import {AccessControlUpgradeable} from
 import {PythStructs} from "src/pyth/PythStructs.sol";
 import {IPyth} from "src/pyth/IPyth.sol";
 
-contract PythCurveOracleAdapter is AccessControlUpgradeable {
+contract ynOracleAdapter is AccessControlUpgradeable {
     error InvalidPriceId();
     error InvalidPriceFeed();
     error InvalidMinAge();
@@ -45,7 +45,7 @@ contract PythCurveOracleAdapter is AccessControlUpgradeable {
         emit NewMinAge(_minAge);
     }
 
-    function getPrice() public view returns (uint256) {
+    function getPriceYnethxWeth() public view returns (uint256) {
         IPyth priceContract = IPyth(priceFeed);
         PythStructs.Price memory r = priceContract.getPriceNoOlderThan(priceId, minAge);
         if (r.price <= 0) revert OraclePriceNotPositive();
